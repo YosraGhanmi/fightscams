@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext} from 'react';
 import { 
   View, 
   Text, 
@@ -12,9 +12,10 @@ import {
   Image
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from "../context/AuthContext"
 import * as ImagePicker from 'expo-image-picker';
 
-export default function DetailedPage({ route }) {
+export default function ShopDetailScreen({ route }) {
   const { pageId, pageName, rating: initialRating, reviewCount: initialReviewCount } = route.params;
   
   // State variables
@@ -22,6 +23,7 @@ export default function DetailedPage({ route }) {
   const [reviewCount, setReviewCount] = useState(initialReviewCount);
   const [userRating, setUserRating] = useState(0);
   const [commentText, setCommentText] = useState('');
+  const { user, isGuest } = useContext(AuthContext)
   const [comments, setComments] = useState([]);
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [replyingTo, setReplyingTo] = useState(null);
