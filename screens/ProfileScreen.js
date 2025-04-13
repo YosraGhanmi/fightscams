@@ -48,7 +48,7 @@ const ProfileScreen = () => {
     <ScrollView style={styles.container}>
        
       <Appbar.Header style={styles.header}>
-        <Appbar.Content title="Add New Shop" />
+        <Appbar.Content title="Profile" />
       </Appbar.Header>
 
       <View style={styles.profileSection}>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   header: {
-    backgroundColor: "#14b8a6",
+    backgroundColor: "#fff",
   },
   headerTitle: {
     fontSize: 20,

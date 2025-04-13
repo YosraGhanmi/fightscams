@@ -17,6 +17,9 @@ import defaultShopImage from '../assets/defaultshop.jpg';
 
 export default function HomeScreen({navigation}) {
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
   const [categories, setCategories] = useState([
     { id: 1, name: 'Clothing' },
     { id: 2, name: 'Furniture' },
@@ -79,6 +82,11 @@ export default function HomeScreen({navigation}) {
     );
   };
 
+  // Filter pages based on search query
+  const filteredPages = popularPages.filter(page => 
+    page.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <ScrollView style={styles.container}>
      <View style={styles.containerr}>
@@ -92,56 +100,114 @@ export default function HomeScreen({navigation}) {
           style={styles.searchInput}
           placeholder="Search Facebook or Instagram pages"
           placeholderTextColor="#777"
+          value={searchQuery}
+          onChangeText={(text) => {
+            setSearchQuery(text);
+            setIsSearching(text.length > 0);
+          }}
+          onFocus={() => setIsSearching(true)}
         />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity onPress={() => {
+            setSearchQuery('');
+            setIsSearching(false);
+          }}>
+            <FontAwesome name="times-circle" size={18} color="#777" style={styles.clearIcon} />
+          </TouchableOpacity>
+        )}
       </View>
 
-      <Text style={styles.sectionTitle}>Categories</Text>
-      <ScrollView 
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.categoriesScrollView}
-      >
-        {categories.map((category) => (
-          <TouchableOpacity key={category.id} style={styles.categoryItem}>
-            <View style={styles.iconContainer}>
-              <FontAwesome name="tag" size={24} color="#14b8a6" />
-            </View>
-            <Text style={styles.categoryText}>{category.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      {isSearching ? (
+        <View style={styles.searchResultsContainer}>
+          <Text style={styles.searchResultsTitle}>Search Results</Text>
+          {filteredPages.length > 0 ? (
+            filteredPages.map((page) => (
+              <TouchableOpacity 
+                key={page.id} 
+                style={styles.pageCard}
+                onPress={() => {
+                  setIsSearching(false);
+                  navigation.navigate('ShopDetail', {
+                    pageId: page.id,
+                    pageName: page.name,
+                    rating: page.rating,
+                    reviewCount: page.reviewCount,
+                    image: page.image
+                  });
+                }}
+              >
+                <View style={styles.pageHeader}>
+                  <View style={styles.pageLogo}>
+                    <Image 
+                      source={page.image} 
+                      style={styles.pageLogoImage} 
+                    />
+                  </View>
+                  <View style={styles.pageInfo}>
+                    <Text style={styles.pageName}>{page.name}</Text>
+                    <View style={styles.ratingContainer}>
+                      {renderStars(page.rating)}
+                      <Text style={styles.reviewsText}>{page.reviewCount} reviews</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <Text style={styles.noResultsText}>No pages found matching "{searchQuery}"</Text>
+          )}
+        </View>
+      ) : (
+        <>
+          <Text style={styles.sectionTitle}>Categories</Text>
+          <ScrollView 
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoriesScrollView}
+          >
+            {categories.map((category) => (
+              <TouchableOpacity key={category.id} style={styles.categoryItem}>
+                <View style={styles.iconContainer}>
+                  <FontAwesome name="tag" size={24} color="#14b8a6" />
+                </View>
+                <Text style={styles.categoryText}>{category.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
 
-      <Text style={styles.sectionTitle}>Popular Pages</Text>
-      {popularPages.map((page) => (
-        <TouchableOpacity 
-          key={page.id} 
-          style={styles.pageCard}
-          onPress={() => navigation.navigate('ShopDetail', {
-            pageId: page.id,
-            pageName: page.name,
-            rating: page.rating,
-            reviewCount: page.reviewCount,
-            image: page.image
-          })}
-        >
-          <View style={styles.pageHeader}>
-            <View style={styles.pageLogo}>
-              <Image 
-                source={page.image} 
-                style={styles.pageLogoImage} 
-              />
-            </View>
-            <View style={styles.pageInfo}>
-              <Text style={styles.pageName}>{page.name}</Text>
-              <View style={styles.ratingContainer}>
-                {renderStars(page.rating)}
-                <Text style={styles.reviewsText}>{page.reviewCount} reviews</Text>
+          <Text style={styles.sectionTitle}>Popular Pages</Text>
+          {popularPages.map((page) => (
+            <TouchableOpacity 
+              key={page.id} 
+              style={styles.pageCard}
+              onPress={() => navigation.navigate('ShopDetail', {
+                pageId: page.id,
+                pageName: page.name,
+                rating: page.rating,
+                reviewCount: page.reviewCount,
+                image: page.image
+              })}
+            >
+              <View style={styles.pageHeader}>
+                <View style={styles.pageLogo}>
+                  <Image 
+                    source={page.image} 
+                    style={styles.pageLogoImage} 
+                  />
+                </View>
+                <View style={styles.pageInfo}>
+                  <Text style={styles.pageName}>{page.name}</Text>
+                  <View style={styles.ratingContainer}>
+                    {renderStars(page.rating)}
+                    <Text style={styles.reviewsText}>{page.reviewCount} reviews</Text>
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-          <Text style={styles.reviewComment}>{page.reviewComment}</Text>
-        </TouchableOpacity>
-      ))}
+              <Text style={styles.reviewComment}>{page.reviewComment}</Text>
+            </TouchableOpacity>
+          ))}
+        </>
+      )}
     </ScrollView>
   );
 }
@@ -159,12 +225,13 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 16,
     color: '#000',
-  }, container: {
+  }, 
+  container: {
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
   headerr: {
-    backgroundColor: "#14b8a6",
+    backgroundColor: "#fff",
   },
   searchContainer: {
     flexDirection: 'row',
@@ -172,7 +239,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 24,
     paddingHorizontal: 16,
-    marginTop : 20,
+    marginTop: 20,
     marginBottom: 24,
     height: 48,
     shadowColor: '#000',
@@ -184,11 +251,29 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginRight: 8,
   },
+  clearIcon: {
+    marginLeft: 8,
+  },
   searchInput: {
     flex: 1,
     height: 48,
     fontSize: 16,
     color: '#333',
+  },
+  searchResultsContainer: {
+    flex: 1,
+  },
+  searchResultsTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    color: '#000',
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 24,
   },
   sectionTitle: {
     fontSize: 24,
