@@ -1,5 +1,5 @@
 "use client"
-
+import { Appbar } from "react-native-paper"
 import { 
   View, 
   Text, 
@@ -9,14 +9,14 @@ import {
   Image, 
   TouchableOpacity 
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+// ✅ Import the image directly
+import defaultShopImage from '../assets/defaultshop.jpg';
 
 export default function HomeScreen({navigation}) {
-  
-  
-  // Sample data - replace with your actual data source (API call, database, etc.)
+
   const [categories, setCategories] = useState([
     { id: 1, name: 'Clothing' },
     { id: 2, name: 'Furniture' },
@@ -24,54 +24,42 @@ export default function HomeScreen({navigation}) {
     { id: 4, name: 'Electronics' },
     { id: 5, name: 'Beauty' }
   ]);
-  
+
   const [popularPages, setPopularPages] = useState([
     { 
       id: 1, 
       name: 'Style Haven', 
       reviewCount: 4120, 
       reviewComment: 'Great service and quality products!',
-      rating: 4.5
+      rating: 4.5,
+      image: defaultShopImage
     },
     { 
       id: 2, 
       name: 'Urban Living', 
       reviewCount: 995, 
       reviewComment: 'Delivered a different item, beware.',
-      rating: 2.3
+      rating: 2.3,
+      image: defaultShopImage
     },
     { 
       id: 3, 
       name: 'Trendy Closet', 
       reviewCount: 4150, 
       reviewComment: 'Reliable seller. Fast delivery.',
-      rating: 4.8
+      rating: 4.8,
+      image: defaultShopImage
     },
     { 
       id: 4, 
       name: 'Tech Galaxy', 
       reviewCount: 2210, 
       reviewComment: 'Good products but slow shipping.',
-      rating: 3.7
+      rating: 3.7,
+      image: defaultShopImage
     }
   ]);
-  
-  // You can replace this with actual data fetching
-  // useEffect(() => {
-  //   // Fetch categories
-  //   fetch('your-api-endpoint/categories')
-  //     .then(response => response.json())
-  //     .then(data => setCategories(data))
-  //     .catch(error => console.error('Error fetching categories:', error));
-  //
-  //   // Fetch popular pages
-  //   fetch('your-api-endpoint/popular-pages')
-  //     .then(response => response.json())
-  //     .then(data => setPopularPages(data))
-  //     .catch(error => console.error('Error fetching popular pages:', error));
-  // }, []);
 
-  // Function to render star rating
   const renderStars = (rating) => {
     const starCount = 5;
     const filledStars = Math.floor(rating);
@@ -93,9 +81,11 @@ export default function HomeScreen({navigation}) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Fight Online Shopping Scams</Text>
-      
-      {/* Search Bar */}
+     <View style={styles.containerr}>
+      <Appbar.Header style={styles.headerr}>
+        <Appbar.Content title="Safer Online Shopping " />
+      </Appbar.Header>
+      </View>
       <View style={styles.searchContainer}>
         <FontAwesome name="search" size={18} color="#777" style={styles.searchIcon} />
         <TextInput
@@ -104,8 +94,7 @@ export default function HomeScreen({navigation}) {
           placeholderTextColor="#777"
         />
       </View>
-      
-      {/* Categories Section */}
+
       <Text style={styles.sectionTitle}>Categories</Text>
       <ScrollView 
         horizontal
@@ -115,16 +104,14 @@ export default function HomeScreen({navigation}) {
         {categories.map((category) => (
           <TouchableOpacity key={category.id} style={styles.categoryItem}>
             <View style={styles.iconContainer}>
-              <FontAwesome name="tag" size={24} color="#2563EB" />
+              <FontAwesome name="tag" size={24} color="#14b8a6" />
             </View>
             <Text style={styles.categoryText}>{category.name}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
-      
-      {/* Popular Pages Section */}
+
       <Text style={styles.sectionTitle}>Popular Pages</Text>
-      
       {popularPages.map((page) => (
         <TouchableOpacity 
           key={page.id} 
@@ -133,12 +120,16 @@ export default function HomeScreen({navigation}) {
             pageId: page.id,
             pageName: page.name,
             rating: page.rating,
-            reviewCount: page.reviewCount
+            reviewCount: page.reviewCount,
+            image: page.image
           })}
         >
           <View style={styles.pageHeader}>
-            <View style={[styles.pageLogo, {backgroundColor: '#2563EB'}]}>
-              <FontAwesome name="shopping-cart" size={24} color="#fff" />
+            <View style={styles.pageLogo}>
+              <Image 
+                source={page.image} 
+                style={styles.pageLogoImage} 
+              />
             </View>
             <View style={styles.pageInfo}>
               <Text style={styles.pageName}>{page.name}</Text>
@@ -149,13 +140,12 @@ export default function HomeScreen({navigation}) {
             </View>
           </View>
           <Text style={styles.reviewComment}>{page.reviewComment}</Text>
-          
-          {/* You can add conditional product images here if needed */}
         </TouchableOpacity>
       ))}
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -169,6 +159,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 16,
     color: '#000',
+  }, container: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+  },
+  headerr: {
+    backgroundColor: "#14b8a6",
   },
   searchContainer: {
     flexDirection: 'row',
@@ -176,6 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 24,
     paddingHorizontal: 16,
+    marginTop : 20,
     marginBottom: 24,
     height: 48,
     shadowColor: '#000',
@@ -252,6 +249,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
+    overflow: 'hidden', // Ensure image doesn't overflow the circular container
+    backgroundColor: '#f1f1f1', // Fallback background color
+  },
+  pageLogoImage: {
+    width: 48,
+    height: 48,
+    resizeMode: 'cover', // This will cover the entire area
   },
   pageInfo: {
     flex: 1,

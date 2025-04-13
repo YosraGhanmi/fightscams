@@ -4,6 +4,7 @@ import { useState } from "react"
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native"
 import { Text, Appbar, Divider, Avatar } from "react-native-paper"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
+import userIcon from "../assets/user.png" // local image
 
 // Mock data for notifications
 const MOCK_NOTIFICATIONS = [
@@ -12,7 +13,7 @@ const MOCK_NOTIFICATIONS = [
     type: "reply",
     user: {
       name: "Ahmed Ben Ali",
-      avatar: "https://placehold.co/50x50",
+      avatar: userIcon,
     },
     content: "replied to your review on Fashion Trends TN",
     time: "2 hours ago",
@@ -23,7 +24,7 @@ const MOCK_NOTIFICATIONS = [
     type: "like",
     user: {
       name: "Sarra Mansour",
-      avatar: "https://placehold.co/50x50",
+      avatar: userIcon,
     },
     content: "liked your review on Tech Haven",
     time: "1 day ago",
@@ -34,7 +35,7 @@ const MOCK_NOTIFICATIONS = [
     type: "mention",
     user: {
       name: "Mohamed Karim",
-      avatar: "https://placehold.co/50x50",
+      avatar: userIcon,
     },
     content: "mentioned you in a comment on Beauty Box",
     time: "3 days ago",
@@ -52,7 +53,7 @@ const MOCK_NOTIFICATIONS = [
     type: "like",
     user: {
       name: "Leila Trabelsi",
-      avatar: "https://placehold.co/50x50",
+      avatar: userIcon,
     },
     content: "and 3 others liked your review on Home Essentials",
     time: "1 week ago",
@@ -78,15 +79,15 @@ const NotificationsScreen = () => {
   const getNotificationIcon = (type) => {
     switch (type) {
       case "reply":
-        return <FontAwesome name="comment" size={24} color="#6200ee" />
+        return <FontAwesome name="comment" size={24} color="#14b8a6" />
       case "like":
-        return <FontAwesome name="thumbs-up" size={24} color="#6200ee" />
+        return <FontAwesome name="thumbs-up" size={24} color="#14b8a6" />
       case "mention":
-        return <FontAwesome name="at" size={24} color="#6200ee" />
+        return <FontAwesome name="at" size={24} color="#14b8a6" />
       case "system":
-        return <FontAwesome name="info-circle" size={24} color="#6200ee" />
+        return <FontAwesome name="info-circle" size={24} color="#14b8a6" />
       default:
-        return <FontAwesome name="bell" size={24} color="#6200ee" />
+        return <FontAwesome name="bell" size={24} color="#14b8a6" />
     }
   }
 
@@ -99,7 +100,7 @@ const NotificationsScreen = () => {
         {item.type === "system" ? (
           <View style={styles.systemIconContainer}>{getNotificationIcon(item.type)}</View>
         ) : (
-          <Avatar.Image size={50} source={{ uri: item.user.avatar }} />
+          <Avatar.Image size={50} source={item.user.avatar} />
         )}
 
         <View style={styles.notificationText}>
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   header: {
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
   },
   unreadBanner: {
     backgroundColor: "rgba(98, 0, 238, 0.1)",
@@ -160,7 +161,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e0e0e0",
   },
   unreadText: {
-    color: "#6200ee",
+    color: "#14b8a6",
     fontWeight: "500",
     textAlign: "center",
   },
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
     marginLeft: 8,
   },
   emptyContainer: {

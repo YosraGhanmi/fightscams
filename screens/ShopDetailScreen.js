@@ -14,9 +14,10 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../context/AuthContext"
 import * as ImagePicker from 'expo-image-picker';
+import userIcon from '../assets/user.png';
 
 export default function ShopDetailScreen({ route }) {
-  const { pageId, pageName, rating: initialRating, reviewCount: initialReviewCount } = route.params;
+  const { pageId, pageName, rating: initialRating, reviewCount: initialReviewCount, image } = route.params;
   
   // State variables
   const [rating, setRating] = useState(initialRating);
@@ -352,9 +353,9 @@ export default function ShopDetailScreen({ route }) {
         {/* Page Header with Rating */}
         <View style={styles.headerCard}>
           <View style={styles.pageInfo}>
-            <View style={[styles.pageLogo, {backgroundColor: '#2563EB'}]}>
-              <FontAwesome name="shopping-cart" size={28} color="#fff" />
-            </View>
+          <View style={styles.pageLogo}>
+  <Image source={image} style={styles.pageLogoImage} />
+</View>
             <Text style={styles.pageName}>{pageName}</Text>
             <View style={styles.ratingContainer}>
               {renderRatingStars(rating)}
@@ -394,7 +395,7 @@ export default function ShopDetailScreen({ route }) {
                 style={styles.attachImageButton}
                 onPress={() => pickImage(false)}
               >
-                <FontAwesome name="camera" size={18} color="#2563EB" style={styles.buttonIcon} />
+                <FontAwesome name="camera" size={18} color="#14b8a6" style={styles.buttonIcon} />
                 <Text style={styles.attachImageText}>Attach Photo</Text>
               </TouchableOpacity>
               
@@ -437,9 +438,15 @@ export default function ShopDetailScreen({ route }) {
         {comments.map((comment) => (
           <View key={comment.id} style={styles.commentCard}>
             <View style={styles.commentHeader}>
-              <Text style={styles.userName}>{comment.userName}</Text>
-              <Text style={styles.commentDate}>{comment.date}</Text>
-            </View>
+  <View style={styles.userAvatarContainer}>
+    <Image source={userIcon} style={styles.userAvatar} />
+  </View>
+  <View style={{ flex: 1 }}>
+    <Text style={styles.userName}>{comment.userName}</Text>
+    <Text style={styles.commentDate}>{comment.date}</Text>
+  </View>
+</View>
+
             <View style={styles.commentRating}>
               {renderRatingStars(comment.rating)}
             </View>
@@ -462,7 +469,7 @@ export default function ShopDetailScreen({ route }) {
                   <FontAwesome 
                     name="thumbs-up" 
                     size={18} 
-                    color={comment.userReaction === 'like' ? "#2563EB" : "#555"} 
+                    color={comment.userReaction === 'like' ? "#14b8a6" : "#555"} 
                     style={styles.reactionIcon} 
                   />
                   <Text style={[styles.reactionText, comment.userReaction === 'like' && styles.activeReactionText]}>
@@ -502,9 +509,15 @@ export default function ShopDetailScreen({ route }) {
                 {comment.replies.map((reply) => (
                   <View key={reply.id} style={styles.replyCard}>
                     <View style={styles.replyHeader}>
-                      <Text style={styles.replyUserName}>{reply.userName}</Text>
-                      <Text style={styles.replyDate}>{reply.date}</Text>
-                    </View>
+  <View style={styles.userAvatarContainer}>
+    <Image source={userIcon} style={styles.userAvatar} />
+  </View>
+  <View style={{ flex: 1 }}>
+    <Text style={styles.replyUserName}>{reply.userName}</Text>
+    <Text style={styles.replyDate}>{reply.date}</Text>
+  </View>
+</View>
+
                     <Text style={styles.replyText}>{reply.text}</Text>
                     
                     {/* Reply image */}
@@ -523,7 +536,7 @@ export default function ShopDetailScreen({ route }) {
                         <FontAwesome 
                           name="thumbs-up" 
                           size={16} 
-                          color={reply.userReaction === 'like' ? "#2563EB" : "#555"} 
+                          color={reply.userReaction === 'like' ? "#14b8a6" : "#555"} 
                           style={styles.reactionIcon} 
                         />
                         <Text style={[styles.replyReactionText, reply.userReaction === 'like' && styles.activeReactionText]}>
@@ -561,7 +574,7 @@ export default function ShopDetailScreen({ route }) {
                   setReplyImage(null);
                 }}
               >
-                <FontAwesome name="reply" size={16} color="#2563EB" style={styles.buttonIcon} />
+                <FontAwesome name="reply" size={16} color="#14b8a6" style={styles.buttonIcon} />
                 <Text style={styles.replyButtonText}>Reply</Text>
               </TouchableOpacity>
             ) : (
@@ -582,7 +595,7 @@ export default function ShopDetailScreen({ route }) {
                     style={styles.attachImageButton}
                     onPress={() => pickImage(true)}
                   >
-                    <FontAwesome name="camera" size={16} color="#2563EB" style={styles.buttonIcon} />
+                    <FontAwesome name="camera" size={16} color="#14b8a6" style={styles.buttonIcon} />
                     <Text style={styles.attachImageText}>Attach Photo</Text>
                   </TouchableOpacity>
                   
@@ -652,7 +665,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
+    overflow: 'hidden', // prevent image overflow
+    backgroundColor: '#f1f1f1'
   },
+  pageLogoImage: {
+    width: 64,
+    height: 64,
+    resizeMode: 'cover',
+  }
+,  
   pageName: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -677,7 +698,7 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   addReviewButton: {
-    backgroundColor: '#2563EB',
+    backgroundColor: '#14b8a6',
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 20,
@@ -719,7 +740,7 @@ const styles = StyleSheet.create({
   userNameDisplay: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#2563EB',
+    color: '#14b8a6',
     marginBottom: 16,
   },
   ratingLabel: {
@@ -747,7 +768,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   attachImageText: {
-    color: '#2563EB',
+    color: '#14b8a6',
     fontSize: 16,
     fontWeight: '500',
   },
@@ -783,7 +804,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   submitButton: {
-    backgroundColor: '#2563EB',
+    backgroundColor: '#14b8a6',
   },
   cancelButtonText: {
     color: '#333',
@@ -877,7 +898,7 @@ const styles = StyleSheet.create({
     minWidth: 20,
   },
   activeReactionText: {
-    color: '#2563EB',
+    color: '#14b8a6',
     fontWeight: '600',
   },
   activeDislikeText: {
@@ -959,7 +980,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   replyButtonText: {
-    color: '#2563EB',
+    color: '#14b8a6',
     fontSize: 14,
     fontWeight: '500',
   },
@@ -982,6 +1003,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  userAvatarContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginRight: 12,
+  },
+  
+  userAvatar: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  
   replyActionButton: {
     borderRadius: 8,
     paddingVertical: 10,

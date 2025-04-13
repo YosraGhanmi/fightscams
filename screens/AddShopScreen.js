@@ -5,7 +5,7 @@ import { View, StyleSheet, ScrollView, TouchableOpacity, Image } from "react-nat
 import { Text, TextInput, Button, Appbar, HelperText, Chip, RadioButton } from "react-native-paper"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import * as ImagePicker from "expo-image-picker"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, CommonActions } from "@react-navigation/native"
 
 const CATEGORIES = [
   "Clothing",
@@ -19,6 +19,9 @@ const CATEGORIES = [
   "Books",
   "Other",
 ]
+
+// Import the default shop image
+const defaultShopImage = require('../assets/defaultshop.jpg')
 
 const AddShopScreen = () => {
   const [shopName, setShopName] = useState("")
@@ -82,10 +85,33 @@ const AddShopScreen = () => {
 
     setIsSubmitting(true)
 
-    // Simulate API call
+    // Generate a unique ID for the new shop (in a real app, this would be from the server)
+    const newShopId = `shop_${Date.now()}`
+    
+    // Navigate to the ShopDetailScreen with the shop details
     setTimeout(() => {
       setIsSubmitting(false)
-      navigation.navigate("Home")
+      
+      // Navigate to nested stack navigator screen
+      navigation.dispatch(
+        CommonActions.navigate({
+          name: 'Home',
+          params: {
+            screen: 'ShopDetail',
+            params: {
+              pageId: newShopId,
+              pageName: shopName,
+              rating: 0, // New shop has 0 rating
+              reviewCount: 0, // New shop has 0 reviews
+              image: shopImage ? { uri: shopImage } : defaultShopImage, // Use the default image if none was selected
+              description: description,
+              category: shopCategory,
+              link: shopLink,
+              platform: platformType
+            }
+          }
+        })
+      )
     }, 1500)
   }
 
@@ -147,15 +173,15 @@ const AddShopScreen = () => {
           <RadioButton.Group onValueChange={(value) => setPlatformType(value)} value={platformType}>
             <View style={styles.radioRow}>
               <View style={styles.radioItem}>
-                <RadioButton value="facebook" color="#6200ee" />
+                <RadioButton value="facebook" color="#14b8a6" />
                 <Text style={{ color: "black" }}>Facebook</Text>
               </View>
               <View style={styles.radioItem}>
-                <RadioButton value="instagram" color="#6200ee" />
+                <RadioButton value="instagram" color="#14b8a6" />
                 <Text style={{ color: "black" }}>Instagram</Text>
               </View>
               <View style={styles.radioItem}>
-                <RadioButton value="website" color="#6200ee" />
+                <RadioButton value="website" color="#14b8a6" />
                 <Text style={{ color: "black" }}>Website</Text>
               </View>
             </View>
@@ -212,7 +238,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   header: {
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
   },
   scrollContent: {
     padding: 16,
@@ -276,7 +302,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   selectedCategoryChip: {
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
   },
   selectedChipText: {
     color: "#fff",
@@ -297,11 +323,11 @@ const styles = StyleSheet.create({
   submitButton: {
     marginTop: 16,
     marginBottom: 16,
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
     paddingVertical: 8,
   },
   submitButtonLabel: {
-    color: "#ffffff", // 👈 Change this to any color you want (e.g., "#000000" for black)
+    color: "#ffffff",
     fontWeight: "bold",
     fontSize: 16,
   },

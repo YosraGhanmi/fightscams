@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#6200ee",
+    color: "#14b8a6",
     marginBottom: 10,
   },
   subtitle: {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   googleButton: {
     marginBottom: 15,
     paddingVertical: 8,
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
   },
   buttonLabel: {
     fontSize: 16,
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   guestButtonText: {
-    color: "#6200ee",
+    color: "#14b8a6",
     fontSize: 16,
     fontWeight: "500",
   },

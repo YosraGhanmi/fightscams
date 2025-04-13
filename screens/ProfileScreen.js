@@ -1,25 +1,55 @@
 "use client"
 
 import { useContext, useState } from "react"
-import { View, StyleSheet, ScrollView } from "react-native"
-import { Text, Button, Avatar, List, Switch, Divider, Card } from "react-native-paper"
+import { View, StyleSheet, ScrollView, Alert } from "react-native"
+import { Text, Button, Avatar, List, Switch,Appbar, Divider, Card } from "react-native-paper"
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { AuthContext } from "../context/AuthContext"
+import { useNavigation } from "@react-navigation/native"
 
 const ProfileScreen = () => {
+  const navigation = useNavigation()
   const { user, isGuest, logout } = useContext(AuthContext)
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [darkModeEnabled, setDarkModeEnabled] = useState(false)
 
   const handleLogout = () => {
-    logout()
+    Alert.alert("Confirm Logout", "Are you sure you want to log out?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Log Out", style: "destructive", onPress: logout }
+    ])
+  }
+
+  const handleSignUp = () => {
+    navigation.navigate("SignUpScreen")
+  }
+
+  const handleLanguage = () => {
+    navigation.navigate("LanguageScreen")
+  }
+
+  const handlePrivacy = () => {
+    navigation.navigate("PrivacySettingsScreen")
+  }
+
+  const handleAbout = () => {
+    navigation.navigate("AboutScreen")
+  }
+
+  const handleSupport = () => {
+    navigation.navigate("SupportScreen")
+  }
+
+  const handleReport = () => {
+    navigation.navigate("ReportProblemScreen")
   }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Profile</Text>
-      </View>
+       
+      <Appbar.Header style={styles.header}>
+        <Appbar.Content title="Add New Shop" />
+      </Appbar.Header>
 
       <View style={styles.profileSection}>
         {isGuest ? (
@@ -63,20 +93,22 @@ const ProfileScreen = () => {
           <Card.Content>
             <Text style={styles.sectionTitle}>Recent Activity</Text>
             <View style={styles.activityItem}>
-              <FontAwesome name="star" size={20} color="#6200ee" />
+              <FontAwesome name="star" size={20} color="#14b8a6" />
               <Text style={styles.activityText}>
                 You reviewed <Text style={styles.activityHighlight}>Tech Haven</Text>
               </Text>
               <Text style={styles.activityTime}>2 days ago</Text>
             </View>
             <View style={styles.activityItem}>
-              <FontAwesome name="thumbs-up" size={20} color="#6200ee" />
+              <FontAwesome name="thumbs-up" size={20} color="#14b8a6" />
               <Text style={styles.activityText}>Your review was marked helpful by 3 users</Text>
               <Text style={styles.activityTime}>1 week ago</Text>
             </View>
           </Card.Content>
         </Card>
       )}
+
+      {/* ... Activity card remains the same ... */}
 
       <View style={styles.settingsSection}>
         <Text style={styles.sectionTitle}>Settings</Text>
@@ -85,8 +117,14 @@ const ProfileScreen = () => {
           titleStyle={styles.listItemTitle}
           description="Receive alerts about your reviews and replies"
           descriptionStyle={styles.listItemDescription}
-          left={(props) => <List.Icon {...props} icon="bell" color="#6200ee" />}
-          right={(props) => <Switch value={notificationsEnabled} onValueChange={setNotificationsEnabled} color="#6200ee" />}
+          left={(props) => <List.Icon {...props} icon="bell" color="#14b8a6" />}
+          right={(props) => (
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={setNotificationsEnabled}
+              color="#14b8a6"
+            />
+          )}
         />
         <Divider />
         <List.Item
@@ -94,8 +132,14 @@ const ProfileScreen = () => {
           titleStyle={styles.listItemTitle}
           description="Switch between light and dark themes"
           descriptionStyle={styles.listItemDescription}
-          left={(props) => <FontAwesome {...props} name="moon-o" size={24} color="#6200ee" style={styles.listIcon} />}
-          right={(props) => <Switch value={darkModeEnabled} onValueChange={setDarkModeEnabled} color="#6200ee" />}
+          left={(props) => <FontAwesome {...props} name="moon-o" size={24} color="#14b8a6" style={styles.listIcon} />}
+          right={(props) => (
+            <Switch
+              value={darkModeEnabled}
+              onValueChange={setDarkModeEnabled}
+              color="#14b8a6"
+            />
+          )}
         />
         <Divider />
         <List.Item
@@ -103,8 +147,9 @@ const ProfileScreen = () => {
           titleStyle={styles.listItemTitle}
           description="English"
           descriptionStyle={styles.listItemDescription}
-          left={(props) => <FontAwesome {...props} name="language" size={24} color="#6200ee" style={styles.listIcon} />}
-          right={(props) => <FontAwesome name="chevron-right" size={18} color="#6200ee" />}
+          left={(props) => <FontAwesome {...props} name="language" size={24} color="#14b8a6" style={styles.listIcon} />}
+          right={(props) => <FontAwesome name="chevron-right" size={18} color="#14b8a6" />}
+          onPress={handleLanguage}
         />
         <Divider />
         <List.Item
@@ -112,8 +157,9 @@ const ProfileScreen = () => {
           titleStyle={styles.listItemTitle}
           description="Manage your data and privacy"
           descriptionStyle={styles.listItemDescription}
-          left={(props) => <FontAwesome {...props} name="shield" size={24} color="#6200ee" style={styles.listIcon} />}
-          right={(props) => <FontAwesome name="chevron-right" size={18} color="#6200ee" />}
+          left={(props) => <FontAwesome {...props} name="shield" size={24} color="#14b8a6" style={styles.listIcon} />}
+          right={(props) => <FontAwesome name="chevron-right" size={18} color="#14b8a6" />}
+          onPress={handlePrivacy}
         />
       </View>
 
@@ -122,28 +168,31 @@ const ProfileScreen = () => {
         <List.Item
           title="About TrustCheck TN"
           titleStyle={styles.listItemTitle}
-          left={(props) => <FontAwesome {...props} name="info-circle" size={24} color="#6200ee" style={styles.listIcon} />}
-          right={(props) => <FontAwesome name="chevron-right" size={18} color="#6200ee" />}
+          left={(props) => <FontAwesome {...props} name="info-circle" size={24} color="#14b8a6" style={styles.listIcon} />}
+          right={(props) => <FontAwesome name="chevron-right" size={18} color="#14b8a6" />}
+          onPress={handleAbout}
         />
         <Divider />
         <List.Item
           title="Contact Support"
           titleStyle={styles.listItemTitle}
-          left={(props) => <FontAwesome {...props} name="envelope" size={24} color="#6200ee" style={styles.listIcon} />}
-          right={(props) => <FontAwesome name="chevron-right" size={18} color="#6200ee" />}
+          left={(props) => <FontAwesome {...props} name="envelope" size={24} color="#14b8a6" style={styles.listIcon} />}
+          right={(props) => <FontAwesome name="chevron-right" size={18} color="#14b8a6" />}
+          onPress={handleSupport}
         />
         <Divider />
         <List.Item
           title="Report a Problem"
           titleStyle={styles.listItemTitle}
-          left={(props) => <FontAwesome {...props} name="exclamation-circle" size={24} color="#6200ee" style={styles.listIcon} />}
-          right={(props) => <FontAwesome name="chevron-right" size={18} color="#6200ee" />}
+          left={(props) => <FontAwesome {...props} name="exclamation-circle" size={24} color="#14b8a6" style={styles.listIcon} />}
+          right={(props) => <FontAwesome name="chevron-right" size={18} color="#14b8a6" />}
+          onPress={handleReport}
         />
       </View>
 
-      <Button 
-        mode="outlined" 
-        onPress={handleLogout} 
+      <Button
+        mode="outlined"
+        onPress={handleLogout}
         style={styles.logoutButton}
         labelStyle={styles.logoutButtonText}
       >
@@ -161,14 +210,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   header: {
-    backgroundColor: "#6200ee",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    backgroundColor: "#14b8a6",
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#fff", // Keeping header text white for contrast
+    color: "#000", // Keeping header text white for contrast
   },
   profileSection: {
     backgroundColor: "#fff",
@@ -185,7 +232,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   guestAvatar: {
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
   },
   guestText: {
     fontSize: 18,
@@ -202,7 +249,7 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     marginTop: 8,
-    backgroundColor: "#6200ee",
+    backgroundColor: "#14b8a6",
     paddingHorizontal: 16,
   },
   buttonText: {
@@ -233,7 +280,7 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#6200ee", // Keeping stat numbers purple for emphasis
+    color: "#14b8a6", // Keeping stat numbers purple for emphasis
   },
   statLabel: {
     fontSize: 12,
@@ -312,12 +359,12 @@ const styles = StyleSheet.create({
   logoutButton: {
     marginHorizontal: 16,
     marginBottom: 24,
-    borderColor: "#6200ee",
+    borderColor: "#14b8a6",
     borderWidth: 1,
     elevation: 1,
   },
   logoutButtonText: {
-    color: "#6200ee", // Keeping the logout button text purple for better visibility
+    color: "#14b8a6", // Keeping the logout button text purple for better visibility
   },
   versionText: {
     textAlign: "center",
